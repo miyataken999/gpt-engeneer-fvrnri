@@ -1,0 +1,132 @@
+
+2024-06-13T16:41:25.504699
+================================ System Message ================================
+
+You will get information about a codebase that is currently on disk in the current folder.
+The user will ask you to write a script that runs the code in a specific way.
+You will answer with code blocks that include all the necessary terminal commands.
+Do not install globally. Do not use sudo.
+Do not explain the code, just give the commands.
+Do not use placeholders, use example values (like . for a folder argument) if necessary.
+
+
+================================ Human Message =================================
+
+
+        Make a unix script that
+        a) installs dependencies
+        b) runs all necessary parts of the codebase (in parallel if necessary)
+        
+Information about the codebase:
+
+```
+File: Structure
+1 test_system_autogen
+2 requirements.txt
+3 src
+4 __init__.py
+5 system_creator.py
+6 test_system.py
+7 test
+8 __init__.py
+9 test_system_creator.py
+
+File: requirements.txt
+1 pytest
+2 dataclasses
+
+File: src/__init__.py
+1 # empty file
+
+File: src/system_creator.py
+1 from dataclasses import dataclass
+2 
+3 @dataclass
+4 class SystemConfig:
+5     """Represents a system configuration"""
+6     name: str
+7     description: str
+8     components: list
+9 
+10 class SystemCreator:
+11     """Creates a system based on a configuration"""
+12     def __init__(self, config: SystemConfig):
+13         self.config = config
+14 
+15     def create_system(self):
+16         """Creates a system based on the configuration"""
+17         # Create system components
+18         components = [component() for component in self.config.components]
+19         # Initialize system
+20         system = System(self.config.name, self.config.description, components)
+21         return system
+22 
+23 class System:
+24     """Represents a system"""
+25     def __init__(self, name: str, description: str, components: list):
+26         self.name = name
+27         self.description = description
+28         self.components = components
+
+File: src/test_system.py
+1 from .system_creator import SystemCreator, SystemConfig
+2 
+3 def create_test_system() -> System:
+4     """Creates a test system"""
+5     config = SystemConfig(
+6         name="Test System",
+7         description="A test system",
+8         components=[ComponentA, ComponentB]
+9     )
+10     creator = SystemCreator(config)
+11     return creator.create_system()
+12 
+13 class ComponentA:
+14     """A test component"""
+15     def __init__(self):
+16         pass
+17 
+18 class ComponentB:
+19     """Another test component"""
+20     def __init__(self):
+21         pass
+
+File: test/__init__.py
+1 # empty file
+
+File: test/test_system_creator.py
+1 import pytest
+2 from src.test_system import create_test_system
+3 
+4 def test_system_creation():
+5     """Tests system creation"""
+6     system = create_test_system()
+7     assert system.name == "Test System"
+8     assert system.description == "A test system"
+9     assert len(system.components) == 2
+10 
+11 def test_component_a():
+12     """Tests ComponentA"""
+13     component = ComponentA()
+14     assert isinstance(component, ComponentA)
+15 
+16 def test_component_b():
+17     """Tests ComponentB"""
+18     component = ComponentB()
+19     assert isinstance(component, ComponentB)
+
+```
+
+================================== Ai Message ==================================
+
+Here is the Unix script that installs dependencies and runs the codebase:
+
+```
+#!/bin/bash
+
+# Install dependencies
+python -m pip install -r requirements.txt
+
+# Run tests in parallel
+pytest -n 2 test
+```
